@@ -13,41 +13,36 @@ class Map
         }
     }
 
-    islandMap()
+    expMap()
     {
-        let noiseMap = this.noiseMap();
         let gradientMap = this.radialGradient();
 
-        for(let y = 0; y < mapLoaded.height; y++)
+        for(let y = 0; y < this.height; y++)
         {
-            for(let x = 0; x < mapLoaded.width; x++)
+            for(let x = 0; x < this.width; x++)
             {
-                let valNoise = noiseMap[x][y];
-                let valGradient = gradientMap[x][y];
-                this.grid[x][y] = valNoise - valGradient;
+
+                let nx = x; 
+                let ny = y;
+
+                let noiseVal = 
+                .5 * this.getNoise(1*nx,1*ny) +
+                0.5 * this.getNoise(2*nx,2*ny) +
+                0.25 * this.getNoise(4*nx,2*ny);
+                
+                noiseVal = Math.pow(noiseVal,exponent); //0 - 10
+                this.grid[x][y] = (noiseVal);// - gradientMap[x][y];
             }
         }
-
     }
 
-    noiseMap()
+    getNoise(x, y)
     {
-        let noiseMap = [];
         let noiseVal;
-        let noiseScale = 0.1;
+        
+        noiseVal = noise((x) * scale, (y) * scale);
 
-        for(let x = 0; x < this.width; x++)
-        {
-            noiseMap[x] = [];
-            for(let y = 0; y < this.height; y++)
-            {
-                noiseDetail(2, 0.2);
-                noiseVal = noise((x) * noiseScale, (y) * noiseScale);
-                noiseVal = noiseVal * 255;
-                noiseMap[x][y] = noiseVal;
-            }
-        }
-        return noiseMap;
+        return noiseVal;
     }
 
     radialGradient()
@@ -75,7 +70,7 @@ class Map
             for (var y = 0; y < gridHeight; y++) 
             {
                 let val = Math.floor(furthestDistanceFromCentre - euclideanDistance({x: x, y: y}, centrePoint));
-                val = (val / furthestDistanceFromCentre) *255;
+                val = (val / furthestDistanceFromCentre);
                 grid[x][y] = plain[x][y] - val;
             }
         }
@@ -92,7 +87,7 @@ class Map
             plain[x] = [];
             for(let y = 0; y < this.height; y++)
             {   
-                plain[x][y] = 200;
+                plain[x][y] = .75;
             }
         }
 

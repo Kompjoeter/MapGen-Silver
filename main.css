@@ -1,0 +1,27 @@
+*
+{
+    margin: 0;
+    padding: 0;
+}
+
+body
+{
+    margin: 10px;
+}
+
+#grid
+{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+#sketch-holder canvas
+{
+    grid-column: 1/2;
+    border: 2px black solid;
+}
+
+#sliders-holder
+{
+    grid-column: 2/3;
+}
