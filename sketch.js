@@ -4,10 +4,15 @@ var mapWidth = 50;
 var mapHeight = 50;
 
 var sliderExponent;
-var sliderScale;
+var sliderScaleOne;
+var sliderScaleTwo;
+var sliderScaleThree;
 
 var exponent;
-var gradientPlain;
+var scaleOne;
+var scaleTwo;
+var scaleThree;
+var gradient;
 
 var mapLoaded = new Map(mapWidth,mapHeight);
 
@@ -42,11 +47,23 @@ function setup()
     sliderExponent = createSlider(0,10,2.2,.1);
     sliderExponent.parent('slider-exponent');
 
-    sliderScale = createSlider(0,.5,.05,.01);
-    sliderScale.parent('slider-scale');
+    sliderScaleOne = createSlider(0,.5,.05,.01);
+    sliderScaleOne.parent('slider-scale-one');
+
+    sliderScaleTwo = createSlider(0,.5,.05,.01);
+    sliderScaleTwo.parent('slider-scale-two');
+
+    sliderScaleThree = createSlider(0,.5,.05,.01);
+    sliderScaleThree.parent('slider-scale-three');
+
+    checkBoxGradient = createCheckbox('',true);
+    checkBoxGradient.parent('checkbox-gradient');
     
-    scale = sliderScale.value();
     exponent = sliderExponent.value();
+    scaleOne = sliderScaleOne.value();
+    scaleTwo = sliderScaleTwo.value();
+    scaleThree = sliderScaleThree.value();
+    gradient = checkBoxGradient.value();
 
     mapLoaded.expMap();
     Navigator.initialize();
@@ -57,11 +74,18 @@ let noInput = false;
 function draw()
 {
     let prevExponent = exponent;
-    let prevScale = scale;
-    exponent = sliderExponent.value();
-    scale = sliderScale.value();
+    let prevScaleOne = scaleOne;
+    let prevScaleTwo = scaleTwo;
+    let prevScaleThree = scaleThree;
+    let prevGradient = gradient;
 
-    if (prevExponent != exponent || prevScale != scale)
+    exponent = sliderExponent.value();
+    scaleOne = sliderScaleOne.value();
+    scaleTwo = sliderScaleTwo.value();
+    scaleThree = sliderScaleThree.value();
+    gradient = checkBoxGradient.checked();
+
+    if (prevExponent != exponent || prevScaleOne != scaleOne || prevScaleTwo != scaleTwo || prevScaleThree != scaleThree || prevGradient != gradient)
     {
         mapLoaded.expMap();
         noInput = false;

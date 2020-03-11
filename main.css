@@ -21,7 +21,7 @@ body
     border: 2px black solid;
 }
 
-#sliders-holder
+#input-holder
 {
     grid-column: 2/3;
 }
