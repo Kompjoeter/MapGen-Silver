@@ -26,21 +26,25 @@ class Map
                 let ny = y;
 
                 let noiseVal = 
-                .5 * this.getNoise(1*nx,1*ny) +
-                0.5 * this.getNoise(2*nx,2*ny) +
-                0.25 * this.getNoise(4*nx,2*ny);
+                .5 * this.getNoise(scaleOne,1*nx,1*ny) +
+                0.5 * this.getNoise(scaleTwo,2*nx,2*ny) +
+                0.25 * this.getNoise(scaleThree,4*nx,2*ny);
                 
                 noiseVal = Math.pow(noiseVal,exponent); //0 - 10
-                this.grid[x][y] = (noiseVal);// - gradientMap[x][y];
+                if (gradient)
+                {
+                    noiseVal -= gradientMap[x][y];
+                }
+                this.grid[x][y] = (noiseVal);
             }
         }
     }
 
-    getNoise(x, y)
+    getNoise(noiseScale, x, y)
     {
         let noiseVal;
         
-        noiseVal = noise((x) * scale, (y) * scale);
+        noiseVal = noise((x) * noiseScale, (y) * noiseScale);
 
         return noiseVal;
     }
