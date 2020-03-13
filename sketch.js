@@ -3,69 +3,80 @@ const canvasHeight = 400;
 var mapWidth = 50;
 var mapHeight = 50;
 
+var slidersHeightRange = [];
+
+var sliderHeightRangeZero;
+var sliderHeightRangeOne;
+var sliderHeightRangeThree;
+var sliderHeightRangeFour;
+var sliderHeightRangeFive;
+var sliderHeightRangeSix;
+var sliderHeightRangeSeven;
+
 var sliderExponent;
-var sliderScaleOne;
-var sliderScaleTwo;
-var sliderScaleThree;
+var slidersScale = [];
+var buttonNewMap;
+var redraw = false;
 
 var exponent;
-var scaleOne;
-var scaleTwo;
-var scaleThree;
+var scales = [];
 var gradient;
 
-var mapLoaded = new Map(mapWidth,mapHeight);
+var mapLoaded;
 
-var waterDeep;
-var water;
-var waterShallow;
-var sand;
-var grassLight;
-var grassMedium;
-var grassHeavy;
-var mountain;
-var mountainSnow;
+sprites = [];
 
 function preload()
 {
-    waterDeep = loadImage('images/water-deep.png');
-    water = loadImage('images/water.png');
-    waterShallow = loadImage('images/water-shallow.png');
-    sand = loadImage('images/sand.png');
-    grassLight = loadImage('images/grass-light.png');
-    grassMedium = loadImage('images/grass-medium.png');
-    grassHeavy = loadImage('images/grass-heavy.png');
-    mountain = loadImage('images/mountain.png');
-    mountainSnow = loadImage('images/mountain-snow.png');
+    sprites[0] = loadImage('images/water.png');
+    sprites[1] = loadImage('images/water-shallow.png');
+    sprites[2] = loadImage('images/sand.png');
+    sprites[3] = loadImage('images/grass-light.png');
+    sprites[4] = loadImage('images/grass-medium.png');
+    sprites[5] = loadImage('images/grass-heavy.png');
+    sprites[6] = loadImage('images/mountain.png');
+    sprites[7] = loadImage('images/mountain-snow.png');
 }
 
 function setup() 
-{    
+{
     var canvas = createCanvas(canvasWidth,canvasHeight);
     canvas.parent('sketch-holder');
+    
+    noiseSeed(Math.floor(Math.random()*1000));
 
-    sliderExponent = createSlider(0,10,2.2,.1);
-    sliderExponent.parent('slider-exponent');
+    sliderExponent = new Slider(0,5,.5,.1,'slider-exponent');
+    sliderExponent.slider.parent(sliderExponent.name);
+    exponent = sliderExponent.slider.value();
 
-    sliderScaleOne = createSlider(0,.5,.05,.01);
-    sliderScaleOne.parent('slider-scale-one');
+    for(i = 0; i < 3; i++)
+    {
+        slidersScale[i] = new Slider(0,.5,.25,0.05,'slider-scale-'+String(i));
+        slidersScale[i].slider.parent(slidersScale[i].name);
+        scales[i] = slidersScale[i].slider.value();
+    }
 
-    sliderScaleTwo = createSlider(0,.5,.05,.01);
-    sliderScaleTwo.parent('slider-scale-two');
+    for(i = 0; i < 8; i++)
+    {
+        let min = 0;
+        let max = 1 / sprites.length;
 
-    sliderScaleThree = createSlider(0,.5,.05,.01);
-    sliderScaleThree.parent('slider-scale-three');
+        console.log('min ' + min + ' max ' + max);
+
+        slidersHeightRange[i] = new Slider(min,max,max,max/20,'slider-height-range-'+String(i));
+        slidersHeightRange[i].slider.parent(slidersHeightRange[i].name);
+        console.log(slidersHeightRange[i].slider.value());
+    }
 
     checkBoxGradient = createCheckbox('',true);
     checkBoxGradient.parent('checkbox-gradient');
-    
-    exponent = sliderExponent.value();
-    scaleOne = sliderScaleOne.value();
-    scaleTwo = sliderScaleTwo.value();
-    scaleThree = sliderScaleThree.value();
     gradient = checkBoxGradient.value();
 
-    mapLoaded.expMap();
+    buttonNewMap = createButton('New Map');
+    buttonNewMap.parent('button-new-map');
+
+    mapLoaded = new Map(mapWidth,mapHeight);
+    mapLoaded.update();
     Navigator.initialize();
 }
 
@@ -74,20 +85,26 @@ let noInput = false;
 function draw()
 {
     let prevExponent = exponent;
-    let prevScaleOne = scaleOne;
-    let prevScaleTwo = scaleTwo;
-    let prevScaleThree = scaleThree;
+    let prevScaleOne = scale[0];
+    let prevScaleTwo = scales[1];
+    let prevScaleThree = scales[2];
     let prevGradient = gradient;
 
-    exponent = sliderExponent.value();
-    scaleOne = sliderScaleOne.value();
-    scaleTwo = sliderScaleTwo.value();
-    scaleThree = sliderScaleThree.value();
+    exponent = sliderExponent.slider.value();
+
+    for(i = 0; i < 3; i++)
+    {
+        scales[i] = slidersScale[i].slider.value();
+    }
+
     gradient = checkBoxGradient.checked();
 
-    if (prevExponent != exponent || prevScaleOne != scaleOne || prevScaleTwo != scaleTwo || prevScaleThree != scaleThree || prevGradient != gradient)
+    if (buttonNewMap.mousePressed(newMap));
+
+    if (prevExponent != exponent || prevScaleOne != scales[0] || prevScaleTwo != scales[1] || prevScaleThree != scales[2] || prevGradient != gradient || redraw != false)
     {
-        mapLoaded.expMap();
+        mapLoaded.update();
+        redraw = false;
         noInput = false;
     }
     //change(testF,sliderExponent);
@@ -102,46 +119,26 @@ function draw()
             {
                 let xDisplay = x - Navigator.minBoundsCurrent[0];
                 let yDisplay = y - Navigator.minBoundsCurrent[1];
-        
-                let numb = mapLoaded.grid[x][y];
-                let img;
+                
+                let img = sprites[0];
+                let elevation = mapLoaded.terrain[x][y];
 
-                if (numb < 0)
+                if (elevation < 0)
                 {
-                    img = waterDeep;
+                    elevation = 0;
                 }
-                else if (numb >= 0 && numb < .1)
+                
+                for(i = 0; i < 8; i++)
                 {
-                    img = water;
+                    let min = slidersHeightRange[i].slider.value() * i;
+                    let max = slidersHeightRange[i].slider.value() * i+1;
+
+                    if (elevation >= min && elevation < max)
+                    {
+                        img = sprites[i];
+                    }
                 }
-                else if (numb >= .1 && numb < .2)
-                {
-                    img = waterShallow;
-                }
-                else if (numb >= .2 && numb < .3)
-                {
-                    img = sand;
-                }
-                else if (numb >= .3 && numb < .4)
-                {
-                    img = grassLight;
-                }
-                else if (numb >= .4 && numb < .5)
-                {   
-                    img = grassMedium;
-                }
-                else if (numb >= .5 && numb < .6)
-                {
-                    img = grassHeavy;
-                }
-                else if (numb >= .6 && numb < .75)
-                {
-                    img = mountain;
-                }
-                else if (numb >= .75)
-                {
-                    img = mountainSnow;
-                }
+
                 
                 image(img,xDisplay*8,yDisplay*8);
             }
@@ -154,4 +151,12 @@ function draw()
 
     noInput = Navigator.handleInput();
     Navigator.navigate();
+}
+
+function newMap()
+{
+    noiseSeed(Math.floor(Math.random()*1000));
+    mapLoaded = new Map(mapWidth,mapHeight);
+    Navigator.initialize();
+    redraw = true;
 }
