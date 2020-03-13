@@ -7,6 +7,8 @@ var sliderExponent;
 var sliderScaleOne;
 var sliderScaleTwo;
 var sliderScaleThree;
+var buttonNewMap;
+var redraw = false;
 
 var exponent;
 var scaleOne;
@@ -40,11 +42,23 @@ function preload()
 }
 
 function setup() 
-{    
+{
+    noiseSeed(Math.floor(Math.random()*1000));
+    
+    let heightRanges = new Array(8);
+    heightRanges[0] = 0;
+    heightRanges[1] = .1;
+    heightRanges[2] = .2;
+    heightRanges[3] = .3;
+    heightRanges[4] = .4;
+    heightRanges[5] = .5;
+    heightRanges[6] = .6;
+    heightRanges[7] = .75;
+
     var canvas = createCanvas(canvasWidth,canvasHeight);
     canvas.parent('sketch-holder');
 
-    sliderExponent = createSlider(0,10,2.2,.1);
+    sliderExponent = createSlider(0,5,2.2,.1);
     sliderExponent.parent('slider-exponent');
 
     sliderScaleOne = createSlider(0,.5,.05,.01);
@@ -58,6 +72,9 @@ function setup()
 
     checkBoxGradient = createCheckbox('',true);
     checkBoxGradient.parent('checkbox-gradient');
+
+    buttonNewMap = createButton('New Map');
+    buttonNewMap.parent('button-new-map');
     
     exponent = sliderExponent.value();
     scaleOne = sliderScaleOne.value();
@@ -85,9 +102,12 @@ function draw()
     scaleThree = sliderScaleThree.value();
     gradient = checkBoxGradient.checked();
 
-    if (prevExponent != exponent || prevScaleOne != scaleOne || prevScaleTwo != scaleTwo || prevScaleThree != scaleThree || prevGradient != gradient)
+    if (buttonNewMap.mousePressed(newMap));
+
+    if (prevExponent != exponent || prevScaleOne != scaleOne || prevScaleTwo != scaleTwo || prevScaleThree != scaleThree || prevGradient != gradient || redraw != false)
     {
         mapLoaded.expMap();
+        redraw = false;
         noInput = false;
     }
     //change(testF,sliderExponent);
@@ -154,4 +174,12 @@ function draw()
 
     noInput = Navigator.handleInput();
     Navigator.navigate();
+}
+
+function newMap()
+{
+    noiseSeed(Math.floor(Math.random()*1000));
+    mapLoaded = new Map(mapWidth,mapHeight);
+    Navigator.initialize();
+    redraw = true;
 }

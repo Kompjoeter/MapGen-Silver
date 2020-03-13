@@ -70,11 +70,12 @@ class Map
           
         for (let x = 0; x < gridWidth; x++) 
         {
-            grid[x] = []
+            grid[x] = [];
             for (var y = 0; y < gridHeight; y++) 
             {
                 let val = Math.floor(furthestDistanceFromCentre - euclideanDistance({x: x, y: y}, centrePoint));
                 val = (val / furthestDistanceFromCentre);
+                console.log(val);
                 grid[x][y] = plain[x][y] - val;
             }
         }
@@ -91,7 +92,7 @@ class Map
             plain[x] = [];
             for(let y = 0; y < this.height; y++)
             {   
-                plain[x][y] = .75;
+                plain[x][y] = 1;
             }
         }
 
