@@ -21,6 +21,7 @@ var redraw = false;
 var exponent;
 var scales = [];
 var gradient;
+var heightRanges = [];
 
 var mapLoaded;
 
@@ -65,7 +66,7 @@ function setup()
 
         slidersHeightRange[i] = new Slider(min,max,max,max/20,'slider-height-range-'+String(i));
         slidersHeightRange[i].slider.parent(slidersHeightRange[i].name);
-        console.log(slidersHeightRange[i].slider.value());
+        heightRanges[i] = slidersHeightRange[i].slider.value();
     }
 
     checkBoxGradient = createCheckbox('',true);
@@ -85,23 +86,35 @@ let noInput = false;
 function draw()
 {
     let prevExponent = exponent;
-    let prevScaleOne = scale[0];
-    let prevScaleTwo = scales[1];
-    let prevScaleThree = scales[2];
+    let prevScales = []
     let prevGradient = gradient;
+    let prevHeightRanges = [];
+
 
     exponent = sliderExponent.slider.value();
 
     for(i = 0; i < 3; i++)
     {
+        prevScales[i] = scales[i];
         scales[i] = slidersScale[i].slider.value();
+    }
+
+    for(i = 0; i < sprites.length; i++)
+    {
+        prevHeightRanges[i] = heightRanges[i];
+        heightRanges[i] = slidersHeightRange[i].slider.value();
+        if (prevHeightRanges[i] != heightRanges[i])
+        {
+            redraw = true;
+        }
     }
 
     gradient = checkBoxGradient.checked();
 
     if (buttonNewMap.mousePressed(newMap));
 
-    if (prevExponent != exponent || prevScaleOne != scales[0] || prevScaleTwo != scales[1] || prevScaleThree != scales[2] || prevGradient != gradient || redraw != false)
+    if (prevExponent != exponent || prevScales[0] != scales[0] || prevScales[1] != scales[1] || prevScales[2] != scales[2] || 
+        prevGradient != gradient || redraw != false)
     {
         mapLoaded.update();
         redraw = false;
@@ -127,11 +140,31 @@ function draw()
                 {
                     elevation = 0;
                 }
+
+                for(i = 8; i > 1; i--)
+                {
+                    if (heightRanges[i] < heightRanges[i-1])
+                    {
+                        if (prevHeightRanges[i] > heightRanges[i])
+                        {
+                            heightRanges[i-1] -= slidersHeightRange[i-1].step;
+                            slidersHeightRange[i-1].slider.value(heightRanges[i-1]);
+                        }
+                        else if (prevHeightRanges[i-1] < heightRanges[i-1])
+                        {
+                            if (heightRanges[i-1] > heightRanges[i])
+                            {
+                            heightRanges[i] += slidersHeightRange[i].step;
+                            slidersHeightRange[i].slider.value(heightRanges[i]);
+                            }
+                        }
+                    }
+                }
                 
                 for(i = 0; i < 8; i++)
                 {
-                    let min = slidersHeightRange[i].slider.value() * i;
-                    let max = slidersHeightRange[i].slider.value() * i+1;
+                    let min = heightRanges[i] * i;
+                    let max = heightRanges[i] * i+1;
 
                     if (elevation >= min && elevation < max)
                     {
