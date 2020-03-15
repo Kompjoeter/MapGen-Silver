@@ -12,7 +12,7 @@ body
 #grid
 {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr;
 }
 
 #sketch-holder canvas
@@ -24,4 +24,9 @@ body
 #input-holder
 {
     grid-column: 2/3;
+}
+
+#input-height-range-holder
+{
+    grid-column: 3/4;
 }

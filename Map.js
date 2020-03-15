@@ -5,39 +5,49 @@ class Map
         this.width = width;
         this.height = height;
 
-        //Initialize 2d Grid
-        this.grid = new Array(this.width);
-        for(let i = 0; i < this.width; i++)
-        {
-            this.grid[i] = new Array(this.height)
-        }
+        this.terrain = this.generate(width, height);
     }
 
-    expMap()
+    update()
     {
-        let gradientMap = this.radialGradient();
+        this.terrain = this.generate(this.width,this.height);
+    }
 
-        for(let y = 0; y < this.height; y++)
+    generate(width,height)
+    {
+        let endMap = new Array(width);
+        for(let i = 0; i < width; i++)
         {
-            for(let x = 0; x < this.width; x++)
+            endMap[i] = new Array(height)
+        }
+
+        if (gradient)
+        {
+            var gradientMap = this.radialGradient();
+        }
+
+        for(let y = 0; y < height; y++)
+        {
+            for(let x = 0; x < width; x++)
             {
 
                 let nx = x; 
                 let ny = y;
 
                 let noiseVal = 
-                .5 * this.getNoise(scaleOne,1*nx,1*ny) +
-                0.5 * this.getNoise(scaleTwo,2*nx,2*ny) +
-                0.25 * this.getNoise(scaleThree,4*nx,2*ny);
+                .5 * this.getNoise(scales[0],1*nx,1*ny) +
+                0.5 * this.getNoise(scales[1],2*nx,2*ny) +
+                0.25 * this.getNoise(scales[2],4*nx,2*ny); 
                 
                 noiseVal = Math.pow(noiseVal,exponent); //0 - 10
                 if (gradient)
                 {
                     noiseVal -= gradientMap[x][y];
                 }
-                this.grid[x][y] = (noiseVal);
+                endMap[x][y] = (noiseVal);
             }
         }
+        return endMap;
     }
 
     getNoise(noiseScale, x, y)
@@ -75,7 +85,6 @@ class Map
             {
                 let val = Math.floor(furthestDistanceFromCentre - euclideanDistance({x: x, y: y}, centrePoint));
                 val = (val / furthestDistanceFromCentre);
-                console.log(val);
                 grid[x][y] = plain[x][y] - val;
             }
         }

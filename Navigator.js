@@ -125,5 +125,4 @@ var Navigator =
         this.move[0] = 0;
         this.move[1] = 0;
     }
-
 }
