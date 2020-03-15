@@ -45,30 +45,51 @@ var Navigator =
 
     handleInput: function()
     {
-        let noInput = true;
+        let handlingInput = true;
+
+   
 
         if (keyIsDown(87))
         {
             this.keyUp = 1;
-            noInput = false;
         }  
         else if (keyIsDown(68))
         { 
             this.keyRight = 1;
-            noInput = false;
         }
         else if (keyIsDown(83))
         { 
             this.keyDown = 1;
-            noInput = false;
         }
         else if (keyIsDown(65))
         {
             this.keyLeft = 1;
-            noInput = false;
+        }
+        else
+        {
+            handlingInput = false;
         }
 
-        return noInput;
+        if (handlingInput)
+        {
+            let prevMinBoundsCurrentX = this.minBoundsCurrent[0];
+            let prevMinBoundsCurrentY = this.minBoundsCurrent[1];
+            let prevMaxBoundsCurrentX = this.maxBoundsCurrent[0];
+            let prevMaxBoundsCurrentY = this.maxBoundsCurrent[1];
+
+            Navigator.navigate();
+            handlingInput = false;
+
+            if (prevMinBoundsCurrentX != this.minBoundsCurrent[0] ||
+                prevMinBoundsCurrentY != this.minBoundsCurrent[1] ||
+                prevMaxBoundsCurrentX != this.maxBoundsCurrent[0] ||
+                prevMaxBoundsCurrentY != this.maxBoundsCurrent[1])
+            {
+                handlingInput = true;
+            }
+        }
+
+        return handlingInput;
     },
     
     navigate: function()
@@ -125,5 +146,4 @@ var Navigator =
         this.move[0] = 0;
         this.move[1] = 0;
     }
-
 }

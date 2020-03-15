@@ -15,39 +15,43 @@ class Map
 
     generate(width,height)
     {
-        let endMap = new Array(width);
+        let noiseMap = new Array(width);
         for(let i = 0; i < width; i++)
         {
-            endMap[i] = new Array(height)
+            noiseMap[i] = new Array(height)
         }
 
         if (gradient)
         {
-            var gradientMap = this.radialGradient();
+            var squareGradientMap = this.squareGradient();
+            var circleGradientMap = this.radialGradient();
         }
 
-        for(let y = 0; y < height; y++)
+        let frequency = noiseScale;
+        let octaves = Math.log(mapWidth) / Math.log(2);
+        let value;
+        
+        noiseDetail(octaves,fallOff);
+    
+        for(let y = 0; y < mapHeight; y++)
         {
-            for(let x = 0; x < width; x++)
-            {
-
-                let nx = x; 
-                let ny = y;
-
-                let noiseVal = 
-                .5 * this.getNoise(scales[0],1*nx,1*ny) +
-                0.5 * this.getNoise(scales[1],2*nx,2*ny) +
-                0.25 * this.getNoise(scales[2],4*nx,2*ny);
-                
-                noiseVal = Math.pow(noiseVal,exponent); //0 - 10
+            for(let x = 0; x < mapWidth; x++)
+            {    
+                value = noise((x)*frequency, (y)*frequency);        
+                if (value < .2)
+                {
+                    value = 0;
+                }
                 if (gradient)
                 {
-                    noiseVal -= gradientMap[x][y];
+                    value = value - ((squareGradientMap[x][y] + circleGradientMap[x][y])/2);
                 }
-                endMap[x][y] = (noiseVal);
+                
+                noiseMap[x][y] = value;
             }
         }
-        return endMap;
+        
+        return noiseMap;
     }
 
     getNoise(noiseScale, x, y)
@@ -59,9 +63,43 @@ class Map
         return noiseVal;
     }
 
+    squareGradient()
+    {
+        let width = this.width;
+        let height = this.height;
+        let halfWidth = width/2;
+        let halfHeight = height /2;
+
+        let grid = this.plainMap(0);
+
+        for(let j = 0; j < height; j++)
+        {
+            for(let i = 0; i < width; i++)
+            {
+                let x = i;
+                let y = j;
+
+                let value;
+
+                x = x > halfWidth ? width - x : x;
+                y = y > halfHeight ? height - y : y;
+
+                let smaller = x < y ? x : y;
+                value = smaller / halfWidth;
+
+                value = 1 - value;
+                value *= value * value;
+
+                grid[i][j] = value;
+            }
+        }
+
+        return grid;
+    }
+
     radialGradient()
     {
-        let plain = this.plainMap();
+        let plain = this.plainMap(1);
         let grid = []
         let gridWidth = this.width;
         let gridHeight = this.height;
@@ -92,7 +130,7 @@ class Map
         return grid;
     }
 
-    plainMap()
+    plainMap(value)
     {
         let plain = [];
 
@@ -101,7 +139,7 @@ class Map
             plain[x] = [];
             for(let y = 0; y < this.height; y++)
             {   
-                plain[x][y] = 1;
+                plain[x][y] = value;
             }
         }
 
