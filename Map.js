@@ -38,29 +38,21 @@ class Map
             for(let x = 0; x < mapWidth; x++)
             {    
                 value = noise((x)*frequency, (y)*frequency);        
-                if (value < .2)
-                {
-                    value = 0;
-                }
+                
                 if (gradient)
                 {
                     value = value - ((squareGradientMap[x][y] + circleGradientMap[x][y])/2);
                 }
-                
+
+                if (value < 0)
+                {
+                    value = 0;
+                }
                 noiseMap[x][y] = value;
             }
         }
         
         return noiseMap;
-    }
-
-    getNoise(noiseScale, x, y)
-    {
-        let noiseVal;
-        
-        noiseVal = noise((x) * noiseScale, (y) * noiseScale);
-
-        return noiseVal;
     }
 
     squareGradient()
