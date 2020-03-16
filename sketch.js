@@ -1,8 +1,8 @@
 //Canvas and Map
 const canvasWidth = 50*8;
 const canvasHeight = 50*8;
-var mapWidth = 75;
-var mapHeight = 75;
+var mapWidth = 50;
+var mapHeight = 50;
 var mapLoaded;
 
 //Draw Elements
@@ -56,48 +56,9 @@ function setup()
 
     //Randomize Map Seed
     noiseSeed(Math.floor(Math.random()*1000));
-
+    
     //Create UI (Sliders/Checkbox/Buttons)
-    //-----Slider to alter Map Shape (FallOff) - Link to HTML - and set Variables
-    sliderFallOff = new Slider(0.05,1,.5,.05,'slider-fallOff');
-    sliderFallOff.slider.parent(sliderFallOff.name);
-    fallOff = sliderFallOff.slider.value();
-    
-    //-----Slider to alter Map Shape (Scale) - Link to HTML - and set Variables
-    sliderNoiseScale = new Slider(0,.5,.22,0.01,'slider-scale');
-    sliderNoiseScale.slider.parent(sliderNoiseScale.name);
-    noiseScale = sliderNoiseScale.slider.value();
-    
-    //-----Create 7 Sliders for Height Distribution - Link to HTML - and set Variables
-    for(i = 1; i < 8; i++)
-    {
-        let max = 1 / sprites.length;
-
-        slidersHeightRange[i] = new Slider(0,max,max,max/20,'slider-height-range-'+String(i));
-        slidersHeightRange[i].slider.parent(slidersHeightRange[i].name);
-        heightRanges[i] = slidersHeightRange[i].slider.value();
-    }
-
-    //-----Checkbox to Substract Gradient from Map - Link to HTML - and set Variables
-    checkBoxGradient = createCheckbox('Island',true);
-    checkBoxGradient.parent('checkbox-gradient');
-    gradient = checkBoxGradient.value();
-
-    //-----Button for New Map Generation - Link to HTML - and set Variables
-    buttonNewMap = createButton('New Map');
-    buttonNewMap.parent('button-new-map');
-
-    radioVisuals = createRadio();
-    radioVisuals.option('Sprites');
-    radioVisuals.option('Circles');
-    radioVisuals.option('Squares');
-    radioVisuals.option('Triangles');
-    radioVisuals.parent('radio-visuals');
-    radioVisuals.value('Circles');
-
-    checkBoxOutline = createCheckbox('No Fill',true);
-    checkBoxOutline.parent('checkbox-outline');
-    outline = checkBoxOutline.value();
+    UI.initialize();
 
     //Generate New Map of standard Size
     mapLoaded = new Map(mapWidth,mapHeight);
@@ -122,7 +83,7 @@ function draw()
                 let xDisplay = x - Navigator.minBoundsCurrent[0];
                 let yDisplay = y - Navigator.minBoundsCurrent[1];
                 
-                adjustSliders();
+                UI.adjustSliders();
                 
                 let img = sprites[0];
                 let color = colors[0];
@@ -131,12 +92,7 @@ function draw()
                 //Get Value of Cell at XY Coordinate
                 let elevation = mapLoaded.terrain[x][y];
 
-                //Floor Value
-                if (elevation < 0)
-                {
-                    elevation = 0;
-                }
-                      
+                //Compare Height Ranges with Cell Value and pick appropriate Sprite or Color
                 for(i = 0; i < 8; i++)
                 {
                     let min = heightRanges[i] * i;
@@ -155,8 +111,12 @@ function draw()
                     }
                 }
 
-
-                if (visuals != 'Sprites')
+                //If Drawing Method is 'Sprites', draw Sprite to Canvas
+                if (visuals == 'Sprites')
+                {
+                    image(img,xDisplay*8,yDisplay*8);
+                }
+                else //If Visuals == 'Circles' or 'Squares' or 'Triangles'
                 {
                     stroke(color);
                     fill(color);
@@ -164,22 +124,19 @@ function draw()
                     {
                         noFill();
                     }
-                }
-
-                switch(visuals)
-                {
-                    case "Sprites":
-                        image(img,xDisplay*8,yDisplay*8);
-                        break;
-                    case "Circles":
-                        circle(4+xDisplay*8,4+yDisplay*8,8 - strokeThickness*2);
-                        break;
-                    case "Squares":
-                        square(strokeThickness+xDisplay*8,strokeThickness+yDisplay*8,8 - strokeThickness*2);
-                        break;
-                    case "Triangles":
-                        triangle(strokeThickness+xDisplay*8,8-strokeThickness+yDisplay*8,(xDisplay*8)+(8-strokeThickness),8-strokeThickness+yDisplay*8,(xDisplay*8)+4,8+(strokeThickness)+(yDisplay*8)-8);
-                        break;
+                    //Pick appropriate Drawing-Method and draw to Canvas
+                    switch(visuals)
+                    {
+                        case "Circles":
+                            circle(4+xDisplay*8,4+yDisplay*8,8 - strokeThickness*2);
+                            break;
+                        case "Squares":
+                            square(strokeThickness+xDisplay*8,strokeThickness+yDisplay*8,8 - strokeThickness*2);
+                            break;
+                        case "Triangles":
+                            triangle(strokeThickness+xDisplay*8,8-strokeThickness+yDisplay*8,(xDisplay*8)+(8-strokeThickness),8-strokeThickness+yDisplay*8,(xDisplay*8)+4,8+(strokeThickness)+(yDisplay*8)-8);
+                            break;
+                    }
                 }
             }
         }
@@ -196,7 +153,7 @@ function draw()
     //Check for Nagitation (WASD) Input
     let handlingInput = Navigator.handleInput();
     //Check for UI Manipulation
-    let updatingUI = updateUI();
+    let updatingUI = UI.update();
     //If Navigation Input or UI Manipulation is true, allow Redrawing of Map
     if (handlingInput || updatingUI)
     {
@@ -211,67 +168,4 @@ function newMap()
     mapLoaded = new Map(mapWidth,mapHeight);
     Navigator.initialize();
     allowDraw = true;
-}
-
-function updateUI()
-{ 
-    let updated = true;
-
-    //Store Latest UI Values
-    let prevFallOff = fallOff;
-    let prevNoiseScale = noiseScale;
-    let prevGradient = gradient;
-    let prevVisuals = visuals;
-    let prevOutline = outline;
-
-   //Update Current UI Values
-    fallOff = sliderFallOff.slider.value();
-    noiseScale = sliderNoiseScale.slider.value();
-    gradient = checkBoxGradient.checked();
-    visuals = radioVisuals.value();
-    outline = checkBoxOutline.checked();
-    buttonNewMap.mousePressed(newMap);
-
-    //Compare UI Values for Changes
-    if (prevFallOff != fallOff || prevNoiseScale != noiseScale || prevGradient != gradient || prevVisuals != visuals || prevOutline != outline)
-    {
-        updated = true;
-    }
-   
-    //Store Latest and Update Current UI Values for Height Distribution - and compare for Changes
-    for(i = 1; i < sprites.length; i++)
-    {
-        prevHeightRanges[i] = heightRanges[i];
-        heightRanges[i] = slidersHeightRange[i].slider.value();
-        if (prevHeightRanges[i] != heightRanges[i])
-        {
-            updated = true;
-        }
-    }
-
-    return updated;
-}
-
-function adjustSliders()
-{
-    //Compare Height Distribution Sliders and Adjust According to Neighbours Value if nessecary.    
-    for(i = 8; i > 1; i--)
-    {
-        if (heightRanges[i] < heightRanges[i-1])
-        {
-            if (prevHeightRanges[i] > heightRanges[i])
-            {
-                heightRanges[i-1] -= slidersHeightRange[i-1].step;
-                slidersHeightRange[i-1].slider.value(heightRanges[i-1]);
-            }
-            else if (prevHeightRanges[i-1] < heightRanges[i-1])
-            {
-                if (heightRanges[i-1] > heightRanges[i])
-                {
-                heightRanges[i] += slidersHeightRange[i].step;
-                slidersHeightRange[i].slider.value(heightRanges[i]);
-                }
-            }
-        }
-    }
 }
