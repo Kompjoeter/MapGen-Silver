@@ -2,31 +2,112 @@
 {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 body
 {
     margin: 10px;
+    background-color: #141d26;
+    color: #CCCCCC;
+    font-family: 'Anonymous Pro', monospace;
 }
 
 #grid
 {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: 400px 1fr 1fr 1fr 1fr;
+    grid-gap: 15px;
+}
+
+#main-title
+{
+    margin-bottom: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+#sketch-holder
+{
+    grid-column: 1/2;
+    border: 2px #CCCCCC solid;
 }
 
 #sketch-holder canvas
 {
+    padding-right: 4px;
+}
+
+#input-visuals
+{
     grid-column: 1/2;
-    border: 2px black solid;
+    padding: 10px;
+    background-color: #233343;
+    border: 2px #CCCCCC solid;
+}
+
+#radio-visuals input
+{
+    margin-right: 10px;
+    margin-left: 5px;
+}
+
+#checkbox-outline
+{
+    grid-column: 1/2;
+    margin: 5px;
+    margin-bottom: 0px;
+}
+
+#checkbox-outline input
+{
+    margin-right: 5px;
 }
 
 #input-holder
 {
     grid-column: 2/3;
+    grid-row: 1;
+
+    padding: 10px;
+    background-color: #233343;
+    border: 2px #CCCCCC solid;
+}
+
+.ui-title
+{
+    margin-bottom: 10px;
+
+    font-weight: bold;
+}
+
+#checkbox-gradient input
+{
+    margin-right: 10px;
+    margin-bottom: 10px;
 }
 
 #input-height-range-holder
 {
     grid-column: 3/4;
+    grid-row: 1;
+    
+    padding: 10px;
+    background-color: #233343;
+    border: 2px #CCCCCC solid;
+}
+
+@media only screen and (max-width: 700px) 
+{
+    #input-holder
+    {
+        grid-column: 1/2;
+        grid-row: initial;
+    }
+
+    #input-height-range-holder
+    {
+        grid-column: 1/2;
+        grid-row: initial;
+    }
+
 }

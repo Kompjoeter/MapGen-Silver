@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
+    <link href="https://fonts.googleapis.com/css?family=Anonymous+Pro&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="main.css">
 
     <script src="p5.js"></script>
@@ -15,68 +16,61 @@
     
 </head>
 <body>
-    <h1>Map Generator W.I.P.</h1>
+    <h1 id="main-title">Map Generator W.I.P.</h1>
 
     <div id="grid">
+    
         <div id="sketch-holder"></div>
-            <div id='input-holder'>
-                <div id="slider-exponent">
-                    <p>Exponent</p>
-                </div>
+        <div id="input-visuals">
+            <div id="radio-visuals"></div>
+            <div id="checkbox-outline"></div>
+        </div>
 
-                <div id="slider-scale-0">
-                    <p>Scale One</p>
-                </div>
-
-                <div id="slider-scale-1">
-                    <p>Scale Two</p>
-                </div>
-
-                <div id="slider-scale-2">
-                    <p>Scale Three</p>
-                </div>
-
-                <div id="checkbox-gradient">
-                    <p>Island</p>
-                </div>
-
-                <div id="button-new-map">
-                    
-                </div>
-
+        <div id='input-holder'>
+            <p class="ui-title">Shape Manipulation</p>
+            <div id="slider-fallOff">
+                <p>FallOff</p>
             </div>
 
-            <div id='input-height-range-holder'>
-                <div id='slider-height-range-0'>
-                    <p>Slider Height Zero</p>
-                </div>
+            <div id="slider-scale">
+                <p>Scale</p>
+            </div>
 
+            <div id="checkbox-gradient"></div>
+
+            <div id="button-new-map">
+                
+            </div>
+        </div>
+
+            <div id='input-height-range-holder'>
+                <p class="ui-title">Height Distribution</p>
                 <div id='slider-height-range-1'>
-                    <p>Slider Height One</p>
+                    <p>Height One</p>
                 </div>
 
                 <div id='slider-height-range-2'>
-                    <p>Slider Height Two</p>
+                    <p>Height Two</p>
                 </div>
 
                 <div id='slider-height-range-3'>
-                    <p>Slider Height Three</p>
+                    <p>Height Three</p>
                 </div>
 
                 <div id='slider-height-range-4'>
-                    <p>Slider Height Four</p>
+                    <p>Height Four</p>
                 </div>
 
                 <div id='slider-height-range-5'>
-                    <p>Slider Height Five</p>
+                    <p>Height Five</p>
                 </div>
 
                 <div id='slider-height-range-6'>
-                    <p>Slider Height Six</p>
+                    <p>Height Six</p>
                 </div>
 
                 <div id='slider-height-range-7'>
-                    <p>Slider Height Seven</p>
+                    <p>Height Seven</p>
                 </div>
 
             </div>

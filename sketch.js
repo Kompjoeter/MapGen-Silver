@@ -1,31 +1,31 @@
-const canvasWidth = 400;
-const canvasHeight = 400;
-var mapWidth = 64;
-var mapHeight = 64;
-
-var slidersHeightRange = [];
-
-var sliderHeightRangeZero;
-var sliderHeightRangeOne;
-var sliderHeightRangeThree;
-var sliderHeightRangeFour;
-var sliderHeightRangeFive;
-var sliderHeightRangeSix;
-var sliderHeightRangeSeven;
-
-var sliderExponent;
-var slidersScale = [];
-var buttonNewMap;
-var redraw = false;
-
-var exponent;
-var scales = [];
-var gradient;
-var heightRanges = [];
-
+//Canvas and Map
+const canvasWidth = 50*8;
+const canvasHeight = 50*8;
+var mapWidth = 50;
+var mapHeight = 50;
 var mapLoaded;
 
+//Draw Elements
 sprites = [];
+colors = [];
+
+//UI Elements
+var slidersHeightRange = [];
+var sliderFallOff;
+var sliderNoiseScale;
+var buttonNewMap;
+var radioVisuals;
+//-----UI Values
+var fallOff;
+var noiseScale;
+var gradient;
+var prevHeightRanges = [];
+var heightRanges = [];
+var visuals;
+var outline;
+
+//Toggles
+var allowDraw = true;
 
 function preload()
 {
@@ -37,129 +37,62 @@ function preload()
     sprites[5] = loadImage('images/grass-heavy.png');
     sprites[6] = loadImage('images/mountain.png');
     sprites[7] = loadImage('images/mountain-snow.png');
+
+    colors[0] = '#1a1016';
+    colors[1] = '#271854';
+    colors[2] = '#317c87';
+    colors[3] = '#74c99e';
+    colors[4] = '#5e2052';
+    colors[5] = '#b13353';
+    colors[6] = '#db604c';
+    colors[7] = '#f6dbba';
 }
 
 function setup() 
 {
+    //Create Canvas and Link it to HTML Element
     var canvas = createCanvas(canvasWidth,canvasHeight);
     canvas.parent('sketch-holder');
-    
+
+    //Randomize Map Seed
     noiseSeed(Math.floor(Math.random()*1000));
+    
+    //Create UI (Sliders/Checkbox/Buttons)
+    UI.initialize();
 
-    sliderExponent = new Slider(0,5,.5,.1,'slider-exponent');
-    sliderExponent.slider.parent(sliderExponent.name);
-    exponent = sliderExponent.slider.value();
-
-    for(i = 0; i < 3; i++)
-    {
-        slidersScale[i] = new Slider(0,.5,.25,0.05,'slider-scale-'+String(i));
-        slidersScale[i].slider.parent(slidersScale[i].name);
-        scales[i] = slidersScale[i].slider.value();
-    }
-
-    for(i = 0; i < 8; i++)
-    {
-        let min = 0;
-        let max = 1 / sprites.length;
-
-        console.log('min ' + min + ' max ' + max);
-
-        slidersHeightRange[i] = new Slider(min,max,max,max/20,'slider-height-range-'+String(i));
-        slidersHeightRange[i].slider.parent(slidersHeightRange[i].name);
-        heightRanges[i] = slidersHeightRange[i].slider.value();
-    }
-
-    checkBoxGradient = createCheckbox('',true);
-    checkBoxGradient.parent('checkbox-gradient');
-    gradient = checkBoxGradient.value();
-
-    buttonNewMap = createButton('New Map');
-    buttonNewMap.parent('button-new-map');
-
+    //Generate New Map of standard Size
     mapLoaded = new Map(mapWidth,mapHeight);
-    mapLoaded.update();
+    
+    //Initialize Variables for Navigation and Display
     Navigator.initialize();
 }
 
-let noInput = false;
-
 function draw()
 {
-    let prevExponent = exponent;
-    let prevScales = []
-    let prevGradient = gradient;
-    let prevHeightRanges = [];
-    
-    exponent = sliderExponent.slider.value();
-
-    for(i = 0; i < 3; i++)
+    if (allowDraw) 
     {
-        prevScales[i] = scales[i];
-        scales[i] = slidersScale[i].slider.value();
-    }
+        background('#233343');
 
-    for(i = 0; i < sprites.length; i++)
-    {
-        prevHeightRanges[i] = heightRanges[i];
-        heightRanges[i] = slidersHeightRange[i].slider.value();
-        if (prevHeightRanges[i] != heightRanges[i])
-        {
-            redraw = true;
-        }
-    }
-
-    gradient = checkBoxGradient.checked();
-
-    if (buttonNewMap.mousePressed(newMap));
-
-    if (prevExponent != exponent || prevScales[0] != scales[0] || prevScales[1] != scales[1] || prevScales[2] != scales[2] || 
-        prevGradient != gradient || redraw != false)
-    {
         mapLoaded.update();
-        redraw = false;
-        noInput = false;
-    }
-    //change(testF,sliderExponent);
-    if (!noInput)
-    {
-        background(51);
-
         //Draw Map
         for(let y = Navigator.minBoundsCurrent[1]; y < Navigator.maxBoundsCurrent[1]; y++)
         {
             for(let x = Navigator.minBoundsCurrent[0]; x < Navigator.maxBoundsCurrent[0]; x++)
             {
+                //Set Drawing Coordinates
                 let xDisplay = x - Navigator.minBoundsCurrent[0];
                 let yDisplay = y - Navigator.minBoundsCurrent[1];
                 
+                UI.adjustSliders();
+                
                 let img = sprites[0];
+                let color = colors[0];
+                let strokeThickness = 1;
+
+                //Get Value of Cell at XY Coordinate
                 let elevation = mapLoaded.terrain[x][y];
 
-                if (elevation < 0)
-                {
-                    elevation = 0;
-                }
-
-                for(i = 8; i > 1; i--)
-                {
-                    if (heightRanges[i] < heightRanges[i-1])
-                    {
-                        if (prevHeightRanges[i] > heightRanges[i])
-                        {
-                            heightRanges[i-1] -= slidersHeightRange[i-1].step;
-                            slidersHeightRange[i-1].slider.value(heightRanges[i-1]);
-                        }
-                        else if (prevHeightRanges[i-1] < heightRanges[i-1])
-                        {
-                            if (heightRanges[i-1] > heightRanges[i])
-                            {
-                            heightRanges[i] += slidersHeightRange[i].step;
-                            slidersHeightRange[i].slider.value(heightRanges[i]);
-                            }
-                        }
-                    }
-                }
-                
+                //Compare Height Ranges with Cell Value and pick appropriate Sprite or Color
                 for(i = 0; i < 8; i++)
                 {
                     let min = heightRanges[i] * i;
@@ -167,28 +100,72 @@ function draw()
 
                     if (elevation >= min && elevation < max)
                     {
-                        img = sprites[i];
+                        if (visuals == 'Sprites')
+                        {
+                            img = sprites[i];
+                        }
+                        else
+                        {
+                            color = colors[i];
+                        }
                     }
                 }
 
-                
-                image(img,xDisplay*8,yDisplay*8);
+                //If Drawing Method is 'Sprites', draw Sprite to Canvas
+                if (visuals == 'Sprites')
+                {
+                    image(img,xDisplay*8,yDisplay*8);
+                }
+                else //If Visuals == 'Circles' or 'Squares' or 'Triangles'
+                {
+                    stroke(color);
+                    fill(color);
+                    if (outline)
+                    {
+                        noFill();
+                    }
+                    //Pick appropriate Drawing-Method and draw to Canvas
+                    switch(visuals)
+                    {
+                        case "Circles":
+                            circle(4+xDisplay*8,4+yDisplay*8,8 - strokeThickness*2);
+                            break;
+                        case "Squares":
+                            square(strokeThickness+xDisplay*8,strokeThickness+yDisplay*8,8 - strokeThickness*2);
+                            break;
+                        case "Triangles":
+                            triangle(strokeThickness+xDisplay*8,8-strokeThickness+yDisplay*8,(xDisplay*8)+(8-strokeThickness),8-strokeThickness+yDisplay*8,(xDisplay*8)+4,8+(strokeThickness)+(yDisplay*8)-8);
+                            break;
+                    }
+                }
             }
         }
-         //Draw Cursor
+         //Draw Cursor/Cell-Selector
         stroke(255);
+        strokeWeight(1);
         noFill();
         square(Navigator.posCursor[0]*8,Navigator.posCursor[1]*8,8);
+
+        //Reset Draw-Map Toggle
+        allowDraw = false;
     }
 
-    noInput = Navigator.handleInput();
-    Navigator.navigate();
+    //Check for Nagitation (WASD) Input
+    let handlingInput = Navigator.handleInput();
+    //Check for UI Manipulation
+    let updatingUI = UI.update();
+    //If Navigation Input or UI Manipulation is true, allow Redrawing of Map
+    if (handlingInput || updatingUI)
+    {
+        allowDraw = true;
+    }
 }
 
 function newMap()
 {
+    //Randomize Map Seed
     noiseSeed(Math.floor(Math.random()*1000));
     mapLoaded = new Map(mapWidth,mapHeight);
     Navigator.initialize();
-    redraw = true;
+    allowDraw = true;
 }
