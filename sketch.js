@@ -1,4 +1,4 @@
-//Canvas and Map
+    //Canvas and Map
 const canvasWidth = 50*8;
 const canvasHeight = 50*8;
 var mapWidth = 50;
@@ -11,6 +11,7 @@ colors = [];
 
 //UI Elements
 var slidersHeightRange = [];
+var textFieldsColor = [];
 var sliderFallOff;
 var sliderNoiseScale;
 var buttonNewMap;
@@ -19,6 +20,7 @@ var radioVisuals;
 var fallOff;
 var noiseScale;
 var gradient;
+var prevColors = []
 var prevHeightRanges = [];
 var heightRanges = [];
 var visuals;
@@ -72,7 +74,7 @@ function draw()
     if (allowDraw) 
     {
         background('#233343');
-
+        
         mapLoaded.update();
         //Draw Map
         for(let y = Navigator.minBoundsCurrent[1]; y < Navigator.maxBoundsCurrent[1]; y++)

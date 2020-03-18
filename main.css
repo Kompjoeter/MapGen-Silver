@@ -1,3 +1,15 @@
+/* ----- */
+:root
+{
+    --color-bg-main: #141d26;
+    --color-bg-card: #233343;
+    --color-bg-input: #2c4054;
+    --color-text-main: #CCCCCC;
+    --color-text-alt: #141d26;
+    --color-special: #75f075;
+    --color-special-alt: #75f0f0;
+}
+
 *
 {
     margin: 0;
@@ -8,23 +20,43 @@
 body
 {
     margin: 10px;
-    background-color: #141d26;
-    color: #CCCCCC;
+    background-color: var(--color-bg-main);
+    color: var(--color-text-main);
     font-family: 'Anonymous Pro', monospace;
 }
 
 #grid
 {
     display: grid;
-    grid-template-columns: 400px 1fr 1fr 1fr 1fr;
+    grid-template-columns: 400px 1fr 1fr 1fr;
     grid-gap: 15px;
 }
 
+/* Titles */
 #main-title
 {
     margin-bottom: 10px;
+
+    color: var(--color-text-main);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
+
+.ui-title
+{
+    margin-bottom: 10px;
+
+    color: var(--color-text-main);
+    font-weight: bold;
+}
+
+.card
+{
+    padding: 10px;
+    background-color: #233343;
+    border: 2px #CCCCCC solid;
+}
+
+/* Containers/Holders - Grid Positioning*/
 
 #sketch-holder
 {
@@ -32,20 +64,44 @@ body
     border: 2px #CCCCCC solid;
 }
 
+#input-visuals-holder
+{
+    grid-column: 1/2;
+}
+
+#input-noise-shape-holder
+{
+    grid-column: 2/3;
+    grid-row: 1;
+    min-width: 175px;
+}
+
+#input-height-range-holder
+{
+    grid-column: 3/4;
+    grid-row: 1;
+    min-width: 175px;
+}
+
+#input-visuals-color-holder
+{
+    grid-column: 4/5;
+    grid-row: 1;
+}
+
+#footer
+{
+    grid-column: 2/5;   
+}
+
+/* Precise Positioning */
+
 #sketch-holder canvas
 {
     padding-right: 4px;
 }
 
-#input-visuals
-{
-    grid-column: 1/2;
-    padding: 10px;
-    background-color: #233343;
-    border: 2px #CCCCCC solid;
-}
-
-#radio-visuals input
+#input-visuals-holder input
 {
     margin-right: 10px;
     margin-left: 5px;
@@ -53,52 +109,110 @@ body
 
 #checkbox-outline
 {
-    grid-column: 1/2;
-    margin: 5px;
-    margin-bottom: 0px;
-}
-
-#checkbox-outline input
-{
-    margin-right: 5px;
-}
-
-#input-holder
-{
-    grid-column: 2/3;
-    grid-row: 1;
-
-    padding: 10px;
-    background-color: #233343;
-    border: 2px #CCCCCC solid;
-}
-
-.ui-title
-{
-    margin-bottom: 10px;
-
-    font-weight: bold;
+    margin-right: 10px;
+    margin-top: 5px;
 }
 
 #checkbox-gradient input
 {
-    margin-right: 10px;
+    margin: 10px;
+    margin-left: 0px;
+}
+
+#input-noise-shape-holder input
+{
     margin-bottom: 10px;
 }
 
-#input-height-range-holder
+#input-noise-shape-holder .button
 {
-    grid-column: 3/4;
-    grid-row: 1;
-    
-    padding: 10px;
-    background-color: #233343;
-    border: 2px #CCCCCC solid;
+    margin-top: 10px;
 }
 
-@media only screen and (max-width: 700px) 
+#input-height-range-holder input
 {
-    #input-holder
+    margin-bottom: 10px;
+}
+
+#input-visuals-color-holder input
+{
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+/* Input Elements & Links */
+
+a
+{
+    color: var(--color-special);
+    text-decoration: none;
+}
+
+a:hover
+{
+    color: var(--color-special-alt);
+}
+
+.button
+{
+    padding: 5px;
+
+    background-color: #CCCCCC;
+    border: none;
+    border-radius: 5px;
+    color: var(--color-text-alt);
+    outline: none;
+
+    font-family: 'Anonymous Pro', monospace;
+    font-weight: bold;
+}
+
+.button:hover
+{
+    background-color: #FFFFFF;
+}
+
+.slider 
+{
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 5px;
+    background-color: #CCCCCC;
+    outline: none;
+}
+
+.slider::-webkit-slider-thumb 
+{
+    -webkit-appearance: none;
+    appearance: none;
+    width: 10px;
+    height: 20px;
+    background: #CCCCCC;
+    border: 1px #999999 solid;
+    border-radius: 2.5px;
+    cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb:hover
+{
+    background-color: #FFFFFF;
+}
+
+.textfield
+{
+    padding: 2px;
+    background-color: var(--color-bg-input);
+    border: 1px #CCCCCC solid;
+    color: #CCCCCC;
+    width: 100%;
+}
+
+/* Responsive */
+
+@media only screen and (max-width: 1000px) 
+{
+    #input-noise-shape-holder
     {
         grid-column: 1/2;
         grid-row: initial;
@@ -110,4 +224,14 @@ body
         grid-row: initial;
     }
 
+    #input-visuals-color-holder
+    {
+        grid-column: 1/2;
+        grid-row: initial;
+    }
+
+    #footer
+    {
+        grid-column: 1/2;
+    }
 }

@@ -47,8 +47,6 @@ var Navigator =
     {
         let handlingInput = true;
 
-   
-
         if (keyIsDown(87))
         {
             this.keyUp = 1;
@@ -72,21 +70,7 @@ var Navigator =
 
         if (handlingInput)
         {
-            let prevMinBoundsCurrentX = this.minBoundsCurrent[0];
-            let prevMinBoundsCurrentY = this.minBoundsCurrent[1];
-            let prevMaxBoundsCurrentX = this.maxBoundsCurrent[0];
-            let prevMaxBoundsCurrentY = this.maxBoundsCurrent[1];
-
             Navigator.navigate();
-            handlingInput = false;
-
-            if (prevMinBoundsCurrentX != this.minBoundsCurrent[0] ||
-                prevMinBoundsCurrentY != this.minBoundsCurrent[1] ||
-                prevMaxBoundsCurrentX != this.maxBoundsCurrent[0] ||
-                prevMaxBoundsCurrentY != this.maxBoundsCurrent[1])
-            {
-                handlingInput = true;
-            }
         }
 
         return handlingInput;
