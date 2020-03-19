@@ -45,21 +45,22 @@ var Navigator =
 
     handleInput: function()
     {
+        
         let handlingInput = true;
 
-        if (keyIsDown(87))
+        if (keyIsDown('W'.charCodeAt(0)))
         {
             this.keyUp = 1;
         }  
-        else if (keyIsDown(68))
+        else if (keyIsDown('D'.charCodeAt(0)))
         { 
             this.keyRight = 1;
         }
-        else if (keyIsDown(83))
+        else if (keyIsDown('S'.charCodeAt(0)))
         { 
             this.keyDown = 1;
         }
-        else if (keyIsDown(65))
+        else if (keyIsDown('A'.charCodeAt(0)))
         {
             this.keyLeft = 1;
         }
@@ -70,10 +71,32 @@ var Navigator =
 
         if (handlingInput)
         {
-            Navigator.navigate();
+            let timeDiff = new Date() - storedTime;
+            if (timeDiff >= 120)
+            {
+                console.log(this.posCell[0]);
+                console.log(this.posCell[1]);
+                storedTime = new Date();
+                this.navigate();
+            }
+            else
+            {
+                handlingInput = false;
+            }
         }
-
+        this.resetInput();
         return handlingInput;
+    },
+
+    resetInput: function()
+    {
+        this.keyUp = 0;
+        this.keyRight = 0;
+        this.keyDown = 0;
+        this.keyLeft = 0;
+
+        this.move[0] = 0;
+        this.move[1] = 0;
     },
     
     navigate: function()
@@ -121,13 +144,6 @@ var Navigator =
                 }
             }
         }
-
-        this.keyUp = 0;
-        this.keyRight = 0;
-        this.keyDown = 0;
-        this.keyLeft = 0;
-
-        this.move[0] = 0;
-        this.move[1] = 0;
+        this.resetInput();
     }
 }
