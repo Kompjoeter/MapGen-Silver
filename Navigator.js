@@ -78,8 +78,8 @@ var Navigator =
     
     navigate: function()
     {
-        this.move[0] = this.keyRight - this.keyLeft;
-        this.move[1] = this.keyDown - this.keyUp;
+        this.move[0] = (this.keyRight - this.keyLeft);
+        this.move[1] = (this.keyDown - this.keyUp);
 
         let newPosCell = [this.posCell[0] + this.move[0],this.posCell[1] + this.move[1]];
         let newPosCursor = [this.posCursor[0] + this.move[0],this.posCursor[1] + this.move[1]];
