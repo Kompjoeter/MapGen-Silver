@@ -69,11 +69,37 @@ body
     grid-column: 1/2;
 }
 
-#input-noise-shape-holder
+#gridbox-holder
 {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+
     grid-column: 2/3;
     grid-row: 1;
-    min-width: 175px;
+    min-width: 175px;    
+}
+
+#input-noise-shape-holder
+{
+    grid-column: 1/2;
+    grid-row: 1/2;
+}
+
+#cell-info-holder
+{
+    grid-column: 1/2;
+    grid-row: 2/3;
+}
+
+#info-box
+{
+    padding: 10px;
+    height: 100%;
+
+    background-color: var(--color-bg-main);
+    border: 1px #CCCCCC solid;
+    border-radius: 5px;
 }
 
 #input-height-range-holder
@@ -127,6 +153,11 @@ body
 #input-noise-shape-holder .button
 {
     margin-top: 10px;
+}
+
+#cell-info-holder p
+{
+    margin-bottom: 10px;
 }
 
 #input-height-range-holder input
@@ -202,36 +233,71 @@ a:hover
 .textfield
 {
     padding: 2px;
+    width: 100%;
     background-color: var(--color-bg-input);
     border: 1px #CCCCCC solid;
     color: #CCCCCC;
-    width: 100%;
+    outline: none;
 }
 
 /* Responsive */
 
 @media only screen and (max-width: 1000px) 
 {
+    #grid
+    {
+        grid-template-columns: 1fr 400px 1fr;
+    }
+
+    #main-title
+    {
+        display: grid;
+        justify-content: center;
+    }
+
+    #sketch-holder
+    {
+        grid-column: 2/3;
+        grid-row: initial;
+    }
+
+    #input-visuals-holder
+    {
+        grid-column: 2/3;
+        grid-row: initial;
+    }
+
+    #gridbox-holder
+    {
+        grid-column: 2/3;
+        grid-row: initial;
+    }
+
     #input-noise-shape-holder
     {
-        grid-column: 1/2;
-        grid-row: initial;
+        grid-row: 2/3;
+    }  
+
+    #cell-info-holder
+    {
+        grid-row: 1/2;
+        margin-bottom: 10px;
     }
 
     #input-height-range-holder
     {
-        grid-column: 1/2;
+        grid-column: 2/3;
         grid-row: initial;
     }
 
     #input-visuals-color-holder
     {
-        grid-column: 1/2;
+        grid-column: 2/3;
         grid-row: initial;
     }
 
     #footer
     {
-        grid-column: 1/2;
+        grid-column: 2/3;
     }
 }

@@ -148,6 +148,11 @@ function draw()
         noFill();
         square(Navigator.posCursor[0]*8,Navigator.posCursor[1]*8,8);
 
+        let cellInfo = document.getElementById('cell-position');
+        let xPos = String(Navigator.posCell[0]);
+        let yPos = String(Navigator.posCell[1]);
+        cellInfo.innerHTML = ('X: '+xPos+'<br>Y: '+yPos);
+
         //Reset Draw-Map Toggle
         allowDraw = false;
     }
