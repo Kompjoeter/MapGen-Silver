@@ -74,6 +74,7 @@ body
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr;
+    grid-gap: 15px;
 
     grid-column: 2/3;
     grid-row: 1;
@@ -97,7 +98,7 @@ body
     padding: 10px;
     height: 100%;
 
-    background-color: var(--color-bg-main);
+    background-color: #1a2632;
     border: 1px #CCCCCC solid;
     border-radius: 5px;
 }
@@ -184,6 +185,11 @@ a:hover
     color: var(--color-special-alt);
 }
 
+.checkbox
+{
+    outline: none;
+}
+
 .button
 {
     padding: 5px;
@@ -201,6 +207,11 @@ a:hover
 .button:hover
 {
     background-color: #FFFFFF;
+}
+
+.radio
+{
+    outline: none;
 }
 
 .slider 
@@ -281,7 +292,6 @@ a:hover
     #cell-info-holder
     {
         grid-row: 1/2;
-        margin-bottom: 10px;
     }
 
     #input-height-range-holder

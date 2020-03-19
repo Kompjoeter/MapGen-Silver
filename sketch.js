@@ -28,6 +28,7 @@ var outline;
 
 //Toggles
 var allowDraw = true;
+var storedTime = new Date();
 
 function preload()
 {
