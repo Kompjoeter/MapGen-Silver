@@ -1,4 +1,5 @@
-//Canvas and Map
+    //Canvas and Map
+const cellSize = 8;
 const canvasWidth = 50*8;
 const canvasHeight = 50*8;
 var mapWidth = 50;
@@ -11,6 +12,7 @@ colors = [];
 
 //UI Elements
 var slidersHeightRange = [];
+var textFieldsColor = [];
 var sliderFallOff;
 var sliderNoiseScale;
 var buttonNewMap;
@@ -19,6 +21,7 @@ var radioVisuals;
 var fallOff;
 var noiseScale;
 var gradient;
+var prevColors = []
 var prevHeightRanges = [];
 var heightRanges = [];
 var visuals;
@@ -26,6 +29,7 @@ var outline;
 
 //Toggles
 var allowDraw = true;
+var storedTime = new Date();
 
 function preload()
 {
@@ -72,7 +76,7 @@ function draw()
     if (allowDraw) 
     {
         background('#233343');
-
+        
         mapLoaded.update();
         //Draw Map
         for(let y = Navigator.minBoundsCurrent[1]; y < Navigator.maxBoundsCurrent[1]; y++)
@@ -145,6 +149,11 @@ function draw()
         strokeWeight(1);
         noFill();
         square(Navigator.posCursor[0]*8,Navigator.posCursor[1]*8,8);
+
+        let cellInfo = document.getElementById('cell-position');
+        let xPos = String(Navigator.posCell[0]);
+        let yPos = String(Navigator.posCell[1]);
+        cellInfo.innerHTML = ('X: '+xPos+'<br>Y: '+yPos);
 
         //Reset Draw-Map Toggle
         allowDraw = false;

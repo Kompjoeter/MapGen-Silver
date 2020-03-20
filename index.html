@@ -16,64 +16,36 @@
     
 </head>
 <body>
-    <h1 id="main-title">Map Generator W.I.P.</h1>
+    <h1 id="main-title">Generation Station: 'Map'</h1>
 
     <div id="grid">
     
-        <div id="sketch-holder"></div>
-        <div id="input-visuals">
-            <div id="radio-visuals"></div>
-            <div id="checkbox-outline"></div>
+        <div id="gridbox-holder">
+            <div id="sketch-holder"></div>
+            <div class="card" id="cell-info-holder">
+                <div id="info-box">
+                    <p>Cell Coordinates</p>
+                    <p id="cell-position"></p>
+                </div>
+            </div>
+            <div class="card" id="input-visuals-holder"></div>        
         </div>
-
-        <div id='input-holder'>
+        
+        <div class="card" id='input-noise-shape-holder'>
             <p class="ui-title">Shape Manipulation</p>
-            <div id="slider-fallOff">
-                <p>FallOff</p>
-            </div>
-
-            <div id="slider-scale">
-                <p>Scale</p>
-            </div>
-
-            <div id="checkbox-gradient"></div>
-
-            <div id="button-new-map">
-                
-            </div>
+        </div>
+      
+        <div class="card" id='input-height-range-holder'>
+            <p class="ui-title">Height Distribution</p>
         </div>
 
-            <div id='input-height-range-holder'>
-                <p class="ui-title">Height Distribution</p>
-                <div id='slider-height-range-1'>
-                    <p>Height One</p>
-                </div>
+        <div class="card" id='input-visuals-color-holder'>
+            <p class="ui-title">Visuals Color</p>
+        </div>
 
-                <div id='slider-height-range-2'>
-                    <p>Height Two</p>
-                </div>
-
-                <div id='slider-height-range-3'>
-                    <p>Height Three</p>
-                </div>
-
-                <div id='slider-height-range-4'>
-                    <p>Height Four</p>
-                </div>
-
-                <div id='slider-height-range-5'>
-                    <p>Height Five</p>
-                </div>
-
-                <div id='slider-height-range-6'>
-                    <p>Height Six</p>
-                </div>
-
-                <div id='slider-height-range-7'>
-                    <p>Height Seven</p>
-                </div>
-
-            </div>
+        <div class="card" id='footer'>
+            <p>Made by RanDByyp <a href="https://github.com/RanDByyp">GitHub</a> - <a href="https://twitter.com/RandbYyp">Twitter</a></p>
+        </div>
         
     </div>
 
