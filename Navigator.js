@@ -12,24 +12,17 @@ var Navigator =
     posCell: new Array(2),
     posCursor: new Array(2),
 
-    keyUp: 0,
-    keyRight: 0,
-    keyDown: 0,
-    keyLeft: 0,
-
-    move: [0,0],
-
     initialize: function()
     {
         this.minBoundsCurrent[0] = 0;
         this.minBoundsCurrent[1] = 0;
-        this.maxBoundsCurrent[0] = 50;
-        this.maxBoundsCurrent[1] = 50;
+        this.maxBoundsCurrent[0] = mapWidth;
+        this.maxBoundsCurrent[1] = mapHeight;
 
         this.minBoundsDisplay[0] = 0;
         this.minBoundsDisplay[1] = 0;
-        this.maxBoundsDisplay[0] = 50;
-        this.maxBoundsDisplay[1] = 50;
+        this.maxBoundsDisplay[0] = canvasWidth/cellSize;
+        this.maxBoundsDisplay[1] = canvasHeight/cellSize;
 
         this.minBoundsMap[0] = 0;
         this.minBoundsMap[1] = 0;
@@ -45,75 +38,67 @@ var Navigator =
 
     handleInput: function()
     {
-        
+        let keyUp = 0;
+        let keyRight = 0;
+        let keyDown = 0;
+        let keyLeft = 0;
+
         let handlingInput = true;
 
         if (keyIsDown('W'.charCodeAt(0)))
         {
-            this.keyUp = 1;
+            keyUp = 1;
         }  
         else if (keyIsDown('D'.charCodeAt(0)))
         { 
-            this.keyRight = 1;
+            keyRight = 1;
         }
         else if (keyIsDown('S'.charCodeAt(0)))
         { 
-            this.keyDown = 1;
+            keyDown = 1;
         }
         else if (keyIsDown('A'.charCodeAt(0)))
         {
-            this.keyLeft = 1;
+            keyLeft = 1;
         }
         else
         {
             handlingInput = false;
         }
 
+        let move = [keyRight - keyLeft, keyDown - keyUp];
+
         if (handlingInput)
         {
             let timeDiff = new Date() - storedTime;
-            if (timeDiff >= 120)
+            if (timeDiff >= 240)
             {
-                console.log(this.posCell[0]);
-                console.log(this.posCell[1]);
                 storedTime = new Date();
-                this.navigate();
+                console.log(move[0]);
+                this.navigate(move);
             }
             else
             {
                 handlingInput = false;
             }
         }
-        this.resetInput();
         return handlingInput;
     },
-
-    resetInput: function()
-    {
-        this.keyUp = 0;
-        this.keyRight = 0;
-        this.keyDown = 0;
-        this.keyLeft = 0;
-
-        this.move[0] = 0;
-        this.move[1] = 0;
-    },
     
-    navigate: function()
+    navigate: function(moveXY)
     {
-        this.move[0] = (this.keyRight - this.keyLeft);
-        this.move[1] = (this.keyDown - this.keyUp);
+        let move = moveXY;
 
-        let newPosCell = [this.posCell[0] + this.move[0],this.posCell[1] + this.move[1]];
-        let newPosCursor = [this.posCursor[0] + this.move[0],this.posCursor[1] + this.move[1]];
+        let newPosCell = [this.posCell[0] + move[0],this.posCell[1] + move[1]];
+        let newPosCursor = [this.posCursor[0] + move[0],this.posCursor[1] + move[1]];
 
         for (let i = 0; i < 2; i++)
         { 
             // If new cursor position is within drawing-bounds.
             if (newPosCursor[i] >= this.minBoundsDisplay[i] && newPosCursor[i] < this.maxBoundsDisplay[i])
             {
-                this.posCell[i] += this.move[i];
-                this.posCursor[i] += this.move[i];
+                this.posCell[i] += move[i];
+                this.posCursor[i] += move[i];
             }
             // If new cursor position is higher than drawing-bounds.
             else if (newPosCursor[i] > this.maxBoundsDisplay[i] - 1)
@@ -123,9 +108,9 @@ var Navigator =
                     // If new cursor position is lower than map-bounds.
                     if (newPosCell[i] < this.maxBoundsMap[i])
                     {
-                        this.minBoundsCurrent[i] += this.move[i];
-                        this.maxBoundsCurrent[i] += this.move[i];
-                        this.posCell[i] += this.move[i];
+                        this.minBoundsCurrent[i] += move[i];
+                        this.maxBoundsCurrent[i] += move[i];
+                        this.posCell[i] += move[i];
                     }
                 }
             }
@@ -137,13 +122,12 @@ var Navigator =
                     // If new cursor position is higher or equal to map-bounds.
                     if (newPosCell[i] >= this.minBoundsMap[i])
                     {
-                        this.minBoundsCurrent[i] += this.move[i];
-                        this.maxBoundsCurrent[i] += this.move[i];
-                        this.posCell[i] += this.move[i];
+                        this.minBoundsCurrent[i] += move[i];
+                        this.maxBoundsCurrent[i] += move[i];
+                        this.posCell[i] += move[i];
                     }
                 }
             }
         }
-        this.resetInput();
     }
 }

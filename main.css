@@ -58,6 +58,17 @@ body
 
 /* Containers/Holders - Grid Positioning*/
 
+#gridbox-holder
+{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 400px 1fr 2fr;
+    grid-gap: 15px;
+
+    grid-column: 1/2;
+    grid-row: 1;
+}
+
 #sketch-holder
 {
     grid-column: 1/2;
@@ -67,30 +78,13 @@ body
 #input-visuals-holder
 {
     grid-column: 1/2;
-}
-
-#gridbox-holder
-{
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr 1fr;
-    grid-gap: 15px;
-
-    grid-column: 2/3;
-    grid-row: 1;
-    min-width: 175px;    
-}
-
-#input-noise-shape-holder
-{
-    grid-column: 1/2;
-    grid-row: 1/2;
+    grid-row: 2/3;
 }
 
 #cell-info-holder
 {
     grid-column: 1/2;
-    grid-row: 2/3;
+    grid-row: 3/4;
 }
 
 #info-box
@@ -103,11 +97,16 @@ body
     border-radius: 5px;
 }
 
+#input-noise-shape-holder
+{
+    grid-column: 2/3;
+    grid-row: 1;
+}
+
 #input-height-range-holder
 {
     grid-column: 3/4;
     grid-row: 1;
-    min-width: 175px;
 }
 
 #input-visuals-color-holder
@@ -118,14 +117,14 @@ body
 
 #footer
 {
-    grid-column: 2/5;   
+    grid-column: 1/5;   
 }
 
 /* Precise Positioning */
 
 #sketch-holder canvas
 {
-    padding-right: 4px;
+    padding-bottom: 4px;
 }
 
 #input-visuals-holder input
@@ -185,7 +184,7 @@ a:hover
     color: var(--color-special-alt);
 }
 
-.checkbox
+.checkbox input
 {
     outline: none;
 }
@@ -266,33 +265,31 @@ a:hover
         justify-content: center;
     }
 
-    #sketch-holder
-    {
-        grid-column: 2/3;
-        grid-row: initial;
-    }
-
-    #input-visuals-holder
-    {
-        grid-column: 2/3;
-        grid-row: initial;
-    }
-
     #gridbox-holder
     {
         grid-column: 2/3;
         grid-row: initial;
     }
 
+    #sketch-holder
+    {
+        grid-row: 1/2;
+    }
+
+    #input-visuals-holder
+    {
+        grid-row: 2/3;
+    }
+
+    #cell-info-holder
+    {
+        grid-row: 3/4;
+    }
+
     #input-noise-shape-holder
     {
         grid-row: 2/3;
     }  
-
-    #cell-info-holder
-    {
-        grid-row: 1/2;
-    }
 
     #input-height-range-holder
     {

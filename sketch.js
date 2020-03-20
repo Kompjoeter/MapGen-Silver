@@ -1,4 +1,5 @@
     //Canvas and Map
+const cellSize = 8;
 const canvasWidth = 50*8;
 const canvasHeight = 50*8;
 var mapWidth = 50;
