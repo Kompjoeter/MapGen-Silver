@@ -9,6 +9,8 @@ https://github.com/RanDByyp/MapGen-Gold
 
 An in-browser 2D Map Generator built with HTML, CSS, Javascript and the p5.js library. The Maps are generated using Perlin Noise and have a variety of sliders/buttons to alter the way it generates and a few options to choose from regarding the way it draws the Map onto the canvas.
 
+![Image of MapGen](https://github.com/RanDByyp/MapGen-Bronze/blob/master/mapgen.PNG)
+
 # Credits
 This program was made by Joran de Boer AKA RanDByyp using the p5.js Library (https://p5js.org/) (which is not made by Joran).
 
